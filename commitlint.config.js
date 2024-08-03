@@ -25,6 +25,7 @@ module.exports = {
         'security',
         'performance',
         'core',
+        'workflow',
       ],
     ],
     // Subject must be capitalized
