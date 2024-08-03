@@ -1,0 +1,7 @@
+lib/
+*.ts
+*.map
+*.test.ts
+jest.config.js
+tsconfig.json
+babel.config.json

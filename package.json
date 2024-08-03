@@ -1,0 +1,57 @@
+{
+  "name": "@rjnapp/dyno-logging",
+  "version": "1.0.0",
+  "description": "error-reporting and loging app, it allows console logging, file logging and remote logging",
+  "main": "dist/index.js",
+  "scripts": {
+    "env:setup": "node ./scripts/setup-env.js",
+    "format": "prettier --write \"lib/**/*.{js,ts,tsx}\"",
+    "build": "npm run env:setup && tsc && babel lib --out-dir dist --copy-files",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint 'lib/**/*.ts'",
+    "clean": "rm -rf dist",
+    "publish": "npm publish",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/rjnapp/dyno-logging.git"
+  },
+  "keywords": [
+    "logging",
+    "error-reporting",
+    "logger",
+    "nodejs-logger"
+  ],
+  "author": "Rajan Tripathi <tripathirajan3@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rjnapp/dyno-logging/issues"
+  },
+  "homepage": "https://github.com/rjnapp/dyno-logging#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/plugin-transform-runtime": "^7.24.7",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-typescript": "^7.24.7",
+    "@babel/register": "^7.24.6",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@types/jest": "^29.5.12",
+    "dotenv": "^16.4.5",
+    "husky": "^8.0.0",
+    "jest": "^29.7.0",
+    "lint-staged": "^15.2.8",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.4",
+    "typescript": "^5.5.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

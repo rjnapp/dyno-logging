@@ -1,6 +1,6 @@
 # Contributing to @rjnapp/dyno-logging
 
-Thank you for considering contributing to [@rjnapp/dyno-logging](https://github.com/rjnapp/dynno-logging) We welcome contributions from the community and appreciate your help in improving this project.
+Thank you for considering contributing to [@rjnapp/dyno-logging](https://github.com/rjnapp/dyno-logging) We welcome contributions from the community and appreciate your help in improving this project.
 
 ## How to Contribute
 
@@ -17,5 +17,5 @@ If you have an idea for a new feature, please open an issue to discuss it first.
 1. **Fork the Repository**: Click the "Fork" button at the top right of this repository page to create a copy of the repository in your own GitHub account.
 2. **Clone Your Fork**: Clone the forked repository to your local machine.
    ```bash
-   git clone https://github.com/rjnapp/dynno-logging
+   git clone https://github.com/rjnapp/dyno-logging
    ```
