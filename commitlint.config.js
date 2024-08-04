@@ -7,7 +7,20 @@ module.exports = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'test',
+        'chore',
+        'security',
+        'revert',
+        'ci',
+        'perf',
+        'build',
+      ],
     ],
 
     // Make the scope mandatory
@@ -18,14 +31,15 @@ module.exports = {
       'always',
       [
         'config',
-        'build',
         'docs',
         'test-cases',
         'dyno-logging',
         'security',
         'performance',
-        'core',
-        'workflow',
+        'release-workflow',
+        'build-workflow',
+        'formatter',
+        'transport',
       ],
     ],
     // Subject must be capitalized
