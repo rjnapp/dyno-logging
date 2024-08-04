@@ -1,0 +1,20 @@
+name: Code Review Enforcer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if push is from myself
+        if: github.actor == 'tripathirajan'
+        run: |
+          echo "Skipping code review for myself"
+          exit 0
+      - name: Require code review
+        uses: actions/require-code-review@v1
+        with:
+          reviewers: 'required-reviewers'
