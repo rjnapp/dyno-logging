@@ -10,12 +10,8 @@ jobs:
   code-review:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if push is from myself
-        if: github.actor == 'tripathirajan'
-        run: |
-          echo "Skipping code review for myself"
-          exit 0
-      - name: Require code review
-        uses: actions/require-code-review@v1
+      - name: Require review
+        uses: Automattic/action-required-review@v4.0.0
         with:
-          reviewers: 'required-reviewers'
+          reviewers: tripathirajan
+          exempt-users: tripathirajan
