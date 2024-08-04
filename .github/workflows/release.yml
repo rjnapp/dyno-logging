@@ -1,0 +1,75 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - develop
+      - release
+  workflow_dispatch:
+    inputs:
+      version_type:
+        description: 'Version type for release branch (patch, minor, major)'
+        required: false
+      prerelease_type:
+        description: 'Pre-release type for develop branch (alpha, beta, rc)'
+        required: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Specify the Node.js version to use
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine version bump
+        id: get_version
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "develop" ]; then
+            PRERELEASE_TYPE=${{ github.event.inputs.prerelease_type || 'beta' }}
+            echo "VERSION_TYPE=prerelease --preid=${PRERELEASE_TYPE}" >> $GITHUB_ENV
+          elif [ "${GITHUB_REF_NAME}" = "release" ]; then
+            VERSION_TYPE=${{ github.event.inputs.version_type || 'patch' }}
+            echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_ENV
+          else
+            echo "Unsupported branch: ${GITHUB_REF_NAME}"
+            exit 1
+          fi
+
+      - name: Validate version type
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "develop" ] && ! [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
+            echo "Pre-releases are only allowed from the develop branch."
+            exit 1
+          elif [ "${GITHUB_REF_NAME}" = "release" ] && [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
+            echo "Pre-releases are not allowed from the release branch."
+            exit 1
+          fi
+
+      - name: Bump version
+        run: npm version ${{ env.VERSION_TYPE }}
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/release'
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            path/to/your/built/files  # Adjust this path to include files you want to attach to the release
+
+      - name: Clean up
+        run: npm cache clean --force
