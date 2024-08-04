@@ -1,6 +1,6 @@
 {
   "name": "@rjnapp/dyno-logging",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "error-reporting and logging app, it allows console logging, file logging and remote logging",
   "main": "dist/index.js",
   "scripts": {
