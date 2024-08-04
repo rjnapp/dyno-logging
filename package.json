@@ -1,18 +1,21 @@
 {
   "name": "@rjnapp/dyno-logging",
   "version": "1.0.0",
-  "description": "error-reporting and loging app, it allows console logging, file logging and remote logging",
+  "description": "error-reporting and logging app, it allows console logging, file logging and remote logging",
   "main": "dist/index.js",
   "scripts": {
     "env:setup": "node ./scripts/setup-env.js",
     "format": "prettier --write \"lib/**/*.{js,ts,tsx}\"",
-    "build": "npm run env:setup && tsc && babel lib --out-dir dist --copy-files",
+    "build": "npm run env:setup && npm run format && tsc && babel lib --extensions '.ts' --out-dir dist",
     "prepublishOnly": "npm run build",
     "test": "jest",
     "lint": "eslint 'lib/**/*.ts'",
     "clean": "rm -rf dist",
     "publish": "npm publish",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "version:major": "npm version major",
+    "version:minor": "npm version minor",
+    "version:prerelease": "npm version prerelease"
   },
   "repository": {
     "type": "git",
