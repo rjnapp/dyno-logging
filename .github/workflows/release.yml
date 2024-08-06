@@ -1,17 +1,23 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - release
   workflow_dispatch:
     inputs:
+      branch:
+        description: 'Branch to run the workflow on'
+        required: true
+        default: 'develop'
+        type: string
       version_type:
-        description: 'Version type for release branch (patch, minor, major)'
+        description: 'Version type (major, minor, patch) for release branch'
         required: false
+        default: 'patch'
+        type: string
       prerelease_type:
-        description: 'Pre-release type for develop branch (alpha, beta, rc)'
+        description: 'Pre-release type (alpha, beta, rc) for develop branch'
         required: false
+        default: 'rc'
+        type: string
 
 jobs:
   release:
@@ -33,7 +39,7 @@ jobs:
         id: get_version
         run: |
           if [ "${GITHUB_REF_NAME}" = "develop" ]; then
-            PRERELEASE_TYPE=${{ github.event.inputs.prerelease_type || 'beta' }}
+            PRERELEASE_TYPE=${{ github.event.inputs.prerelease_type || 'rc' }}
             echo "VERSION_TYPE=prerelease --preid=${PRERELEASE_TYPE}" >> $GITHUB_ENV
           elif [ "${GITHUB_REF_NAME}" = "release" ]; then
             VERSION_TYPE=${{ github.event.inputs.version_type || 'patch' }}
@@ -58,8 +64,8 @@ jobs:
 
       - name: Commit changes (if any)
         run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "Your Name"
+          git config --global user.email "tripathirajan3@gmail.com"
+          git config --global user.name "Rajan Tripathi"
           git add -A
           git diff-index --quiet HEAD || git commit -m "chore: commit changes before publishing"
           git push origin HEAD:${GITHUB_REF_NAME}
