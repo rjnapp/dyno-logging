@@ -29,7 +29,16 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+        
+      - name: Debug environment
+        run: |
+          echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+          echo "VERSION_TYPE=${{ env.VERSION_TYPE }}"
+          echo "Current Git Status:"
+          git status
+          echo "Git Log:"
+          git log -1
+          
       - name: Determine version bump
         id: get_version
         run: |
