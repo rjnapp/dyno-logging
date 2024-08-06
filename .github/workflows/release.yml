@@ -18,7 +18,7 @@ permissions:
   actions: write
   repository-projects: write
   pull-requests: write
-  
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        
+
       - name: Debug environment
         run: |
           echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
@@ -43,7 +43,7 @@ jobs:
           git status
           echo "Git Log:"
           git log -1
-          
+
       - name: Determine version bump
         id: get_version
         run: |
@@ -67,18 +67,19 @@ jobs:
             echo "Pre-releases are not allowed from the release branch."
             exit 1
           fi
-          
+
       - name: Set up Git
         run: |
           git config --global user.email "tripathirajan3@gmail.com"
           git config --global user.name "Rajan Tripathi"
           git config --list
-          
+
       - name: Bump version
         run: |
           npm version ${{ env.VERSION_TYPE }}
           NEW_VERSION=$(node -p "require('./package.json').version")
-          git commit --amend -m "chore(release): ${NEW_VERSION} version released" || true
+          git commit --amend -m "chore(release): ${NEW_VERSION} version released" || echo "No commit to amend"
+          echo ${{ secrets.GITHUB_TOKEN }}
           git push origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME} --force
 
       - name: Publish to npm
