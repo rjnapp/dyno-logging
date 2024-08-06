@@ -87,6 +87,7 @@ jobs:
           npm version ${{ env.VERSION_TYPE }}
           NEW_VERSION=$(node -p "require('./package.json').version")
           git commit --amend -m "chore(release): ${NEW_VERSION} version released" || echo "No commit to amend"
+          echo "Starting git push..."
           git push origin HEAD:${GITHUB_REF_NAME} --force > push_output.log 2>&1
           if [ $? -ne 0 ]; then
             echo "Git push failed. Here is the detailed output:"
