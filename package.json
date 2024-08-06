@@ -3,6 +3,9 @@
   "version": "0.0.1-rc.0",
   "description": "error-reporting and logging app, it allows console logging, file logging and remote logging",
   "main": "dist/index.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
   "scripts": {
     "env:setup": "node ./scripts/setup-env.js",
     "format": "prettier --write \"lib/**/*.{js,ts,tsx}\"",
