@@ -57,7 +57,7 @@ jobs:
       - name: Bump version
         run: npm version ${{ env.VERSION_TYPE }}
 
-      - name: Commit changes (if any)
+      - name: Amend commit message
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
           git config --global user.email "tripathirajan3@gmail.com"
