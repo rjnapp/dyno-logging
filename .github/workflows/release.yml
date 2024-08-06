@@ -62,12 +62,14 @@ jobs:
             echo "Pre-releases are not allowed from the release branch."
             exit 1
           fi
-
+      - name: Set up Git
+        run: |
+          git config --global user.email "tripathirajan3@gmail.com"
+          git config --global user.name "Rajan Tripathi"
+          git config --list
       - name: Bump version
         run: |
           npm version ${{ env.VERSION_TYPE }}
-          git config --global user.email "tripathirajan3@gmail.com"
-          git config --global user.name "Rajan Tripathi"
           NEW_VERSION=$(node -p "require('./package.json').version")
           git commit --amend -m "chore(release): ${NEW_VERSION} version released" || true
           git push origin HEAD:${GITHUB_REF_NAME} --force
