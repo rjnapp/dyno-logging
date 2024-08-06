@@ -59,11 +59,11 @@ jobs:
 
       - name: Commit changes (if any)
         run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
           git config --global user.email "tripathirajan3@gmail.com"
           git config --global user.name "Rajan Tripathi"
-          git add -A
-          git diff-index --quiet HEAD || git commit -m "chore: commit changes before publishing"
-          git push origin HEAD:${GITHUB_REF_NAME}
+          git commit --amend -m "chore(release): ${NEW_VERSION} version released" || true
+          git push origin HEAD:${GITHUB_REF_NAME} --force
 
       - name: Publish to npm
         env:
