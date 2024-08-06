@@ -79,7 +79,7 @@ jobs:
           npm version ${{ env.VERSION_TYPE }}
           NEW_VERSION=$(node -p "require('./package.json').version")
           git commit --amend -m "chore(release): ${NEW_VERSION} version released" || true
-          git push origin HEAD:${GITHUB_REF_NAME} --force
+          git push origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:${GITHUB_REF_NAME} --force
 
       - name: Publish to npm
         env:
