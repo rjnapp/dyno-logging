@@ -40,6 +40,7 @@ module.exports = {
         'build-workflow',
         'formatter',
         'transport',
+        'release',
       ],
     ],
     // Subject must be capitalized

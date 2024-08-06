@@ -1,88 +1,113 @@
-name: Release
+# name: Release
 
-on:
-  workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to run the workflow on'
-        required: true
-        default: 'develop'
-        type: string
-      version_type:
-        description: 'Version type (major, minor, patch) for release branch'
-        required: false
-        default: 'patch'
-        type: string
-      prerelease_type:
-        description: 'Pre-release type (alpha, beta, rc) for develop branch'
-        required: false
-        default: 'rc'
-        type: string
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       version_type:
+#         description: 'Version type (major, minor, patch) for release branch'
+#         required: false
+#         default: 'patch'
+#         type: string
+#       prerelease_type:
+#         description: 'Pre-release type (alpha, beta, rc) for develop branch'
+#         required: false
+#         default: 'rc'
+#         type: string
 
-jobs:
-  release:
-    runs-on: ubuntu-latest
+# permissions:
+#   actions: write
+#   repository-projects: write
+#   pull-requests: write
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# jobs:
+#   release:
+#     runs-on: ubuntu-latest
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20' # Specify the Node.js version to use
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '20' # Specify the Node.js version to use
 
-      - name: Determine version bump
-        id: get_version
-        run: |
-          if [ "${GITHUB_REF_NAME}" = "develop" ]; then
-            PRERELEASE_TYPE=${{ github.event.inputs.prerelease_type || 'rc' }}
-            echo "VERSION_TYPE=prerelease --preid=${PRERELEASE_TYPE}" >> $GITHUB_ENV
-          elif [ "${GITHUB_REF_NAME}" = "release" ]; then
-            VERSION_TYPE=${{ github.event.inputs.version_type || 'patch' }}
-            echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_ENV
-          else
-            echo "Unsupported branch: ${GITHUB_REF_NAME}"
-            exit 1
-          fi
+#       - name: Install dependencies
+#         run: npm ci
 
-      - name: Validate version type
-        run: |
-          if [ "${GITHUB_REF_NAME}" = "develop" ] && ! [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
-            echo "Pre-releases are only allowed from the develop branch."
-            exit 1
-          elif [ "${GITHUB_REF_NAME}" = "release" ] && [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
-            echo "Pre-releases are not allowed from the release branch."
-            exit 1
-          fi
+#       - name: Debug environment
+#         run: |
+#           echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+#           echo "VERSION_TYPE=${{ env.VERSION_TYPE }}"
+#           echo "Current Git Status:"
+#           git status
+#           echo "Git Log:"
+#           git log -1
 
-      - name: Bump version
-        run: npm version ${{ env.VERSION_TYPE }}
+#       - name: Determine version bump
+#         id: get_version
+#         run: |
+#           if [ "${GITHUB_REF_NAME}" = "develop" ]; then
+#             PRERELEASE_TYPE=${{ github.event.inputs.prerelease_type || 'rc' }}
+#             echo "VERSION_TYPE=prerelease --preid=${PRERELEASE_TYPE}" >> $GITHUB_ENV
+#           elif [ "${GITHUB_REF_NAME}" = "release" ]; then
+#             VERSION_TYPE=${{ github.event.inputs.version_type || 'patch' }}
+#             echo "VERSION_TYPE=${VERSION_TYPE}" >> $GITHUB_ENV
+#           else
+#             echo "Unsupported branch: ${GITHUB_REF_NAME}"
+#             exit 1
+#           fi
 
-      - name: Commit changes (if any)
-        run: |
-          git config --global user.email "tripathirajan3@gmail.com"
-          git config --global user.name "Rajan Tripathi"
-          git add -A
-          git diff-index --quiet HEAD || git commit -m "chore: commit changes before publishing"
-          git push origin HEAD:${GITHUB_REF_NAME}
+#       - name: Validate version type
+#         run: |
+#           if [ "${GITHUB_REF_NAME}" = "develop" ] && ! [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
+#             echo "Pre-releases are only allowed from the develop branch."
+#             exit 1
+#           elif [ "${GITHUB_REF_NAME}" = "release" ] && [[ "${VERSION_TYPE}" == *"prerelease"* ]]; then
+#             echo "Pre-releases are not allowed from the release branch."
+#             exit 1
+#           fi
 
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish
+#       - name: Set up Git
+#         run: |
+#           git config --global user.email "tripathirajan3@gmail.com"
+#           git config --global user.name "Rajan Tripathi"
+#           git config --list
 
-      - name: Create GitHub Release
-        if: github.ref == 'refs/heads/release'
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: |
-            dist/**
+#       - name: Branches
+#         run: |
+#           git branch -a
 
-      - name: Clean up
-        run: npm cache clean --force
+#       - name: Remote urls
+#         run: |
+#           git remote -v
+
+#       # - name: Bump version
+#       #   run: |
+#       #     npm version ${{ env.VERSION_TYPE }}
+#       #     NEW_VERSION=$(node -p "require('./package.json').version")
+#       #     git commit --amend -m "chore(release): ${NEW_VERSION} version released" || echo "No commit to amend"
+#       #      echo "Starting git push..."
+#       #     git push origin HEAD:${GITHUB_REF_NAME} --force > push_output.log 2>&1
+#       #     if [ $? -ne 0 ]; then
+#       #       echo "Git push failed. Here is the detailed output:"
+#       #       cat push_output.log
+#       #       exit 1
+#       #     fi
+
+#       - name: Publish to npm
+#         env:
+#           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#         run: npm publish
+
+#       - name: Create GitHub Release
+#         if: github.ref == 'refs/heads/release'
+#         uses: softprops/action-gh-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           files: |
+#             dist/**
+
+#       - name: Clean up
+#         run: npm cache clean --force
