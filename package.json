@@ -15,7 +15,7 @@
     "prepare": "husky install",
     "version:major": "npm version major",
     "version:minor": "npm version minor",
-    "version:prerelease": "npm version prerelease"
+    "version:prerelease": "npm version prerelease --preid=rc"
   },
   "repository": {
     "type": "git",
