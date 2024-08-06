@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  }
+  },
   "scripts": {
     "env:setup": "node ./scripts/setup-env.js",
     "format": "prettier --write \"lib/**/*.{js,ts,tsx}\"",
