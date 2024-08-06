@@ -28,7 +28,7 @@ jobs:
           node-version: '20' # Specify the Node.js version to use
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         
       - name: Debug environment
         run: |
